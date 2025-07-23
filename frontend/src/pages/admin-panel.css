@@ -768,7 +768,7 @@ body {
   font-size: 0.875rem;
   color: var(--gray-600);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp:3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-top: var(--space-2);
@@ -1010,14 +1010,14 @@ body {
   gap: var(--space-1);
 }
 
+.stat-label {
+  font-size: 0.875rem;
+  color: #222 !important; /* gris oscuro legible */
+}
 .stat-value {
   font-size: 1.5rem;
   font-weight: 600;
-}
-
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--gray-600);
+  color: #0077cc !important; /* azul visible, o el que prefieras */
 }
 
 .seller-tabs {

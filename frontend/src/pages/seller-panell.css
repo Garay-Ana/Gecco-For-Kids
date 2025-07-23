@@ -53,10 +53,12 @@
   border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 500;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   transition: var(--transition);
+  margin-left: 0; /* Eliminado margen para mejor alineación */
+  margin-top: 0; /* Eliminado margen para alinear verticalmente */
 }
 
 .sales-back-button:hover {
@@ -194,7 +196,7 @@
 .view-sales-button {
   background-color: var(--secondary-color);
   color: var(--white);
-  margin: 20px auto 0;
+  margin: 0 0 0 20px; /* Ajustado margen para alinear con el botón Volver al panel */
 }
 
 .view-sales-button:hover {

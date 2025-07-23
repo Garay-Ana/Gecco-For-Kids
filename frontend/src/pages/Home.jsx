@@ -292,7 +292,7 @@ const sadmin= location.pathname === '/privateadmin';
               </svg>
             </a>
           </div>
-          <p className="footer-authors" style={{marginTop: '0.7rem', fontSize: '1rem', color: '#64748b', textAlign: 'center'}}>Autores: Ana Gabriel Garay, Cesar Eduardo Galvis</p>
+          
         </div>
       </footer>
     </div>

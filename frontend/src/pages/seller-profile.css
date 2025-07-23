@@ -170,6 +170,7 @@
 .logout-button {
   background-color: var(--danger-color);
   color: var(--white);
+  margin-left: 30px; /* Incrementado margen a la izquierda para mayor separación */
 }
 
 .logout-button:hover {

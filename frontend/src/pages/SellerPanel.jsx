@@ -11,6 +11,7 @@ export default function SellerPanel() {
   const [msg, setMsg] = useState({ text: '', type: '' });
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showClients, setShowClients] = useState(true); // Estado para mostrar/ocultar lista
   const navigate = useNavigate();
   const token = localStorage.getItem('sellerToken');
 
@@ -380,81 +381,89 @@ export default function SellerPanel() {
             <h2 className="section-title">
               <i className="fas fa-users"></i> Vendedores a Cargo
             </h2>
+            <button
+              className="btn toggle-btn"
+              onClick={() => setShowClients(!showClients)}
+            >
+              {showClients ? 'Ocultar personas a cargo' : 'Ver personas a cargo'}
+            </button>
             <div className="total-count">
               Total: {filteredClients.length} {filteredClients.length === 1 ? 'vendedor' : 'vendedores'}
             </div>
           </div>
           
-          <div className="clients-grid">
-            {filteredClients.length === 0 ? (
-              <div className="empty-state">
-                <i className="fas fa-user-friends empty-icon"></i>
-                <h3>No hay personas a mostrar</h3>
-                {search && (
-                  <button
-                    className="clear-search-btn"
-                    onClick={() => setSearch('')}
-                  >
-                    Limpiar búsqueda
-                  </button>
-                )}
-              </div>
-            ) : (
-              filteredClients.map(client => (
-                <div key={client._id} className="client-card">
-                  <div className="client-header">
-                    <div className="client-avatar">
-                      {client.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="client-main-info">
-                      <h3 className="client-name">{client.name}</h3>
-                      <div className="client-code">
-                        <i className="fas fa-id-card"></i> {client.code}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="client-details">
-                    <div className="client-detail">
-                      <i className="fas fa-phone"></i>
-                      <span>{client.contact}</span>
-                    </div>
-                    <div className="client-detail">
-                      <i className="fas fa-map-marker-alt"></i>
-                      <span>{client.address}</span>
-                    </div>
-                    {client.notes && (
-                      <div className="client-notes">
-                        <i className="fas fa-sticky-note"></i>
-                        <span>{client.notes}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="client-actions">
+          {showClients && (
+            <div className="clients-grid">
+              {filteredClients.length === 0 ? (
+                <div className="empty-state">
+                  <i className="fas fa-user-friends empty-icon"></i>
+                  <h3>No hay personas a mostrar</h3>
+                  {search && (
                     <button
-                      onClick={() => handleDelete(client._id)}
-                      className="btn delete-btn"
+                      className="clear-search-btn"
+                      onClick={() => setSearch('')}
                     >
-                      <i className="fas fa-trash"></i> Eliminar
+                      Limpiar búsqueda
                     </button>
-                    <button
-                      onClick={() => navigate(`/seller/client/${client._id}`)}
-                      className="btn detail-btn"
-                    >
-                      <i className="fas fa-eye"></i> Detalle
-                    </button>
-                    <button
-                      onClick={() => handleEdit(client)}
-                      className="btn edit-btn"
-                    >
-                      <i className="fas fa-edit"></i> Editar
-                    </button>
-                  </div>
+                  )}
                 </div>
-              ))
-            )}
-          </div>
+              ) : (
+                filteredClients.map(client => (
+                  <div key={client._id} className="client-card">
+                    <div className="client-header">
+                      <div className="client-avatar">
+                        {client.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="client-main-info">
+                        <h3 className="client-name">{client.name}</h3>
+                        <div className="client-code">
+                          <i className="fas fa-id-card"></i> {client.code}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="client-details">
+                      <div className="client-detail">
+                        <i className="fas fa-phone"></i>
+                        <span>{client.contact}</span>
+                      </div>
+                      <div className="client-detail">
+                        <i className="fas fa-map-marker-alt"></i>
+                        <span>{client.address}</span>
+                      </div>
+                      {client.notes && (
+                        <div className="client-notes">
+                          <i className="fas fa-sticky-note"></i>
+                          <span>{client.notes}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="client-actions">
+                      <button
+                        onClick={() => handleDelete(client._id)}
+                        className="btn delete-btn"
+                      >
+                        <i className="fas fa-trash"></i> Eliminar
+                      </button>
+                      <button
+                        onClick={() => navigate(`/seller/client/${client._id}`)}
+                        className="btn detail-btn"
+                      >
+                        <i className="fas fa-eye"></i> Detalle
+                      </button>
+                      <button
+                        onClick={() => handleEdit(client)}
+                        className="btn edit-btn"
+                      >
+                        <i className="fas fa-edit"></i> Editar
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
         </section>
       </main>
 

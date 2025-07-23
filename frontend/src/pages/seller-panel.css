@@ -197,24 +197,25 @@ body {
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.2); /* Fondo más transparente */
+  background: #ffffff; /* Fondo blanco para mejor claridad */
   padding: 1.5rem;
   border-radius: var(--radius-md);
   text-align: center;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Borde más visible */
+  border: 1px solid #cbd5e0; /* Borde gris claro */
+  box-shadow: 0 2px 8px rgba(203, 213, 224, 0.6);
 }
 
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
-  color: white;
+  color: #1a365d; /* Texto azul oscuro */
+  text-shadow: none;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.9);
+  color: #e0e7ff; /* Azul claro para texto */
   text-transform: uppercase;
   letter-spacing: 1px;
 }

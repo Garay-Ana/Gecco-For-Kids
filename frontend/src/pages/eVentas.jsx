@@ -75,11 +75,16 @@ export default function EVentas() {
 
   return (
     <div className="sales-container">
-      <header className="sales-header">
-        <h1 className="sales-title">Registrar Venta</h1>
-        <button className="sales-back-button" onClick={() => navigate('/seller/panel')}>
-          <i className="fas fa-arrow-left"></i> Volver al panel
-        </button>
+      <header className="sales-header" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <h1 className="sales-title" style={{ marginRight: '20px' }}>Registrar Venta</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button className="sales-back-button" onClick={() => navigate('/seller/panel')}>
+            <i className="fas fa-arrow-left"></i> Volver al panel
+          </button>
+          <button className="view-sales-button" onClick={() => navigate('/seller/VerVentas')}>
+            <i className="fas fa-list"></i> Ver Historial de Ventas
+          </button>
+        </div>
       </header>
 
       <div className="sales-content">
@@ -243,10 +248,7 @@ export default function EVentas() {
           )}
         </form>
 
-        <div className="additional-actions">
-          <button className="view-sales-button" onClick={() => navigate('/seller/VerVentas')}>
-            <i className="fas fa-list"></i> Ver Historial de Ventas
-          </button>
+        <div>
         </div>
       </div>
     </div>
