@@ -324,5 +324,137 @@ function normalizeName(name) {
     res.status(500).json({ error: 'Error al registrar la venta' });
   }
 });
+router.get('/admin/report', verifyToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'No autorizado' });
+    }
 
+    const { startDate, endDate } = req.query;
+    const filter = {};
+
+    if (startDate || endDate) {
+      filter.saleDate = {};
+      if (startDate) filter.saleDate.$gte = new Date(startDate);
+      if (endDate) filter.saleDate.$lte = new Date(endDate + 'T23:59:59.999Z');
+    }
+
+    const sales = await Order.find(filter)
+      .sort({ saleDate: -1 })
+      .populate('seller') // Para incluir nombre o código del vendedor
+      .populate('items.product');
+
+    const doc = new PDFDocument({ margin: 40, size: 'A4' });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=reporte_admin_${new Date().toISOString().split('T')[0]}.pdf`
+    );
+    doc.pipe(res);
+
+    // Título
+    doc.fontSize(20).font('Helvetica-Bold').text('REPORTE DE VENTAS (ADMIN)', { align: 'center' }).moveDown(0.5);
+    if (startDate || endDate) {
+      doc.fontSize(12).font('Helvetica')
+        .text(`Período: ${startDate || 'Inicio'} - ${endDate || 'Actual'}`)
+        .moveDown(1);
+    }
+
+    if (!sales.length) {
+      doc.fontSize(14).fillColor('#7f8c8d')
+        .text('No se encontraron ventas en el período indicado', { align: 'center' });
+      doc.end();
+      return;
+    }
+
+    // Tabla
+    const tableTop = doc.y;
+    const rowHeight = 20;
+    const columnWidths = [70, 90, 80, 120, 40, 80, 60]; // 7 columnas
+    const headers = ['Fecha', 'Vendedor', 'Productos', 'Cant.', 'Total', 'Pago'];
+
+    let y = tableTop;
+    let totalCantidad = 0;
+    let totalVentas = 0;
+
+    // Encabezado
+    doc.font('Helvetica-Bold').fontSize(10);
+    headers.forEach((h, i) => {
+      doc.text(h, 40 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
+        width: columnWidths[i],
+        align: 'left'
+      });
+    });
+
+    y += rowHeight;
+    doc.moveTo(40, y - 5).lineTo(555, y - 5).stroke();
+
+    doc.font('Helvetica').fontSize(9);
+    sales.forEach((sale, idx) => {
+      const productos = sale.items.map(i => i.name).join(', ');
+      const cantidad = sale.items.reduce((s, i) => s + i.quantity, 0);
+      const total = sale.total;
+      const vendedor = sale.seller?.name || sale.seller?.code || 'N/A';
+
+      totalCantidad += cantidad;
+      totalVentas += total;
+
+      if (y + rowHeight > 750) {
+        doc.addPage();
+        y = 40;
+      }
+
+      if (idx % 2 === 0) {
+        doc.rect(40, y - 2, 515, rowHeight).fill('#f9f9f9').fillColor('black');
+      }
+
+      const row = [
+        new Date(sale.saleDate).toLocaleDateString('es-CO'),
+        sale.customerName || 'N/A',
+        vendedor,
+        productos,
+        cantidad.toString(),
+        new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(total),
+        sale.paymentMethod || 'N/A'
+      ];
+
+      row.forEach((text, i) => {
+        doc.fillColor('black').text(text, 40 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
+          width: columnWidths[i],
+          align: 'left'
+        });
+      });
+
+      y += rowHeight;
+    });
+
+    // Resumen
+    y += 20;
+    doc.font('Helvetica-Bold').fontSize(11).text('RESUMEN FINAL', 400, y);
+    y += 15;
+    doc.font('Helvetica').fontSize(10)
+      .text(`Total ventas: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(totalVentas)}`, 400, y)
+      .text(`Ventas registradas: ${sales.length}`, 400, y + 15)
+      .text(`Productos vendidos: ${totalCantidad}`, 400, y + 30);
+
+    // Pie de página
+    const now = new Date();
+    now.setHours(now.getHours() - 5);
+    const fecha = now.toLocaleDateString('es-CO');
+    const hora = now.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    doc.moveDown(2)
+      .fontSize(10)
+      .fillColor('#95a5a6')
+      .text(`Reporte generado el ${fecha} a las ${hora}`, { align: 'center' });
+
+    doc.end();
+
+  } catch (err) {
+    console.error('Error generando PDF admin:', err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Error al generar el reporte' });
+    }
+  }
+});
 module.exports = router; 

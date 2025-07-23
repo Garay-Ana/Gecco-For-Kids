@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import './admin-panel.css';
 
 
@@ -208,35 +206,27 @@ export default function AdminPanel() {
     fetchSellerSales(seller._id);
   };
 
-  const generateSalesReport = () => {
-  if (!sellerSales || sellerSales.length === 0) {
-    alert('No hay ventas para generar el reporte');
-    return;
+  const generateSalesReport = async () => {
+  try {
+    const res = await axios.get(`https://tu-backend.com/admin/report/${selectedSeller._id}`, {
+      responseType: 'blob', // importante para manejar el PDF
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    const blob = new Blob([res.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `reporte_ventas_${selectedSeller.name}.pdf`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Error descargando el reporte:', err);
+    alert('No se pudo generar el reporte');
   }
-
-  const doc = new jsPDF();
-  doc.setFontSize(14);
-  doc.text(`Reporte de Ventas - ${selectedSeller.name}`, 14, 20);
-  doc.setFontSize(11);
-  doc.text(`Código del Vendedor: ${selectedSeller.code}`, 14, 28);
-
-  const tableData = sellerSales.map((sale, idx) => [
-    idx + 1,
-    new Date(sale.createdAt).toLocaleDateString(),
-    sale.customerName,
-    `$${sale.total.toLocaleString('es-CO')}`,
-    sale.paymentMethod || 'No especificado',
-  ]);
-
-  autoTable(doc, {
-    startY: 36,
-    head: [['#', 'Fecha', 'Vendedor', 'Total', 'Método de Pago']],
-    body: tableData,
-  });
-
-  doc.save(`reporte_ventas_${selectedSeller.name}.pdf`);
 };
-
 
 
   const handleToggleSellers = () => {
@@ -653,7 +643,7 @@ export default function AdminPanel() {
                       <div className="seller-stats">
                         <div className="stat">
                           <span className="stat-value">{sellerClients.length}</span>
-                          <span className="stat-label">Clientes</span>
+                          <span className="stat-label">Vendedor</span>
                         </div>
                         {sellerSales.length > 0 && (
   <div className="generate-report-btn">
