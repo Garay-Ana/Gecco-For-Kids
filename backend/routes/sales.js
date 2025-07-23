@@ -340,6 +340,7 @@ router.get('/admin/report/:sellerId', verifyToken, async (req, res) => {
       if (startDate) filter.saleDate.$gte = new Date(startDate);
       if (endDate) filter.saleDate.$lte = new Date(endDate + 'T23:59:59.999Z');
     }
+    const vendedorNombre = sales[0]?.seller?.name || sales[0]?.seller?.code || 'Vendedor desconocido';
 
     const sales = await Order.find(filter)
       .sort({ saleDate: -1 })
@@ -355,7 +356,8 @@ router.get('/admin/report/:sellerId', verifyToken, async (req, res) => {
     doc.pipe(res);
 
     doc.fontSize(20).font('Helvetica-Bold').text('REPORTE DE VENTAS POR VENDEDOR', { align: 'center' }).moveDown(0.5);
-    doc.fontSize(12).font('Helvetica').text(`ID Vendedor: ${sellerId}`);
+    doc.fontSize(12).font('Helvetica').text(`Nombre del Vendedor: ${vendedorNombre}`);
+
     if (startDate || endDate) {
       doc.moveDown(0.5).text(`Período: ${startDate || 'Inicio'} - ${endDate || 'Actual'}`);
     }
@@ -372,7 +374,7 @@ router.get('/admin/report/:sellerId', verifyToken, async (req, res) => {
     const tableTop = doc.y;
     const rowHeight = 20;
     const columnWidths = [70, 100, 150, 50, 80, 60];
-    const headers = ['Fecha', 'Cliente', 'Productos', 'Cant.', 'Total', 'Pago'];
+    const headers = ['Fecha', 'Vendedor', 'Productos', 'Cant.', 'Total', 'Pago'];
 
     let y = tableTop;
     let totalCantidad = 0;
