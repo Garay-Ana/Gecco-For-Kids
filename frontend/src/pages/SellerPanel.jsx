@@ -34,14 +34,14 @@ export default function SellerPanel() {
   };
 
   const fetchClients = async () => {
-    const res = await axios.get('https://gecco-for-kinds.onrender.com/api/sellers/clients', {
+    const res = await axios.get('https://gecco-for-kids.onrender.com/api/sellers/clients', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setClients(res.data);
   };
 
   const fetchSummary = async () => {
-    const res = await axios.get('https://gecco-for-kinds.onrender.com/api/sellers/zone-summary', {
+    const res = await axios.get('https://gecco-for-kids.onrender.com/api/sellers/zone-summary', {
       headers: { Authorization: `Bearer ${token}` }
     });
     console.log('zone-summary data:', res.data);
@@ -56,14 +56,14 @@ export default function SellerPanel() {
     try {
       if (editingId) {
         await axios.put(
-          `https://gecco-for-kinds.onrender.com/api/sellers/clients/${editingId}`,
+          `https://gecco-for-kids.onrender.com/api/sellers/clients/${editingId}`,
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
           setMsg({ text: 'Vendedor actualizado con éxito', type: 'success' });
       } else {
         await axios.post(
-          'https://gecco-for-kinds.onrender.com/api/sellers/clients',
+          'https://gecco-for-kids.onrender.com/api/sellers/clients',
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -101,7 +101,7 @@ export default function SellerPanel() {
     
     try {
       await axios.delete(
-        `https://gecco-for-kinds.onrender.com/api/sellers/clients/${id}`,
+        `https://gecco-for-kids.onrender.com/api/sellers/clients/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMsg({ text: 'Vendedor eliminado con éxito', type: 'success' });
@@ -122,7 +122,7 @@ export default function SellerPanel() {
     
     try {
       const res = await axios.post(
-        'https://gecco-for-kinds.onrender.com/api/upload-client',
+        'https://gecco-for-kids.onrender.com/api/upload-client',
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -167,7 +167,7 @@ export default function SellerPanel() {
           </button>
           <button 
             className="btn logout-btn"
-            onClick={() => { localStorage.removeItem('sellerToken'); navigate('/seller/login'); }}
+            onClick={() => { localStorage.removeItem('sellerToken'); navigate('/privatevendor'); }}
           >
             <i className="fas fa-sign-out-alt"></i> Cerrar sesión
           </button>
@@ -321,7 +321,7 @@ export default function SellerPanel() {
                 {form.image && (
                   <div className="file-preview">
                     <img
-                      src={`https://gecco-for-kinds.onrender.com${form.image}`}
+                      src={`https://gecco-for-kids.onrender.com${form.image}`}
                       alt="Previsualización"
                       className="uploaded-image"
                     />

@@ -94,7 +94,7 @@ const sadmin= location.pathname === '/privateadmin';
     if (trimmedSearch.length > 0) {
       params.append('search', trimmedSearch);
     }
-    const url = `https://gecco-for-kinds.onrender.com/api/products${params.toString() ? '?' + params.toString() : ''}`;
+    const url = `https://gecco-for-kids.onrender.com/api/products${params.toString() ? '?' + params.toString() : ''}`;
     axios.get(url)
       .then(res => {
         setProducts(res.data);

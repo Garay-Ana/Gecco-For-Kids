@@ -16,7 +16,7 @@ export default function AdminOrders() {
     setError('');
     try {
       // Cambia la URL según tu backend
-      const res = await axios.get('https://gecco-for-kinds.onrender.com/api/orders', {
+      const res = await axios.get('https://gecco-for-kids.onrender.com/api/orders', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setOrders(res.data);
