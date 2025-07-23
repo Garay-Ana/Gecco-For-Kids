@@ -357,7 +357,6 @@ router.get('/admin/report/:sellerId', verifyToken, async (req, res) => {
 
     doc.fontSize(20).font('Helvetica-Bold').text('REPORTE DE VENTAS POR VENDEDOR', { align: 'center' }).moveDown(0.5);
     doc.fontSize(12).font('Helvetica').text(`Nombre del Vendedor: ${vendedorNombre}`);
-
     if (startDate || endDate) {
       doc.moveDown(0.5).text(`Período: ${startDate || 'Inicio'} - ${endDate || 'Actual'}`);
     }
