@@ -324,14 +324,16 @@ function normalizeName(name) {
     res.status(500).json({ error: 'Error al registrar la venta' });
   }
 });
-router.get('/admin/report', verifyToken, async (req, res) => {
+router.get('/admin/report/:sellerId', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ error: 'No autorizado' });
     }
 
     const { startDate, endDate } = req.query;
-    const filter = {};
+    const sellerId = req.params.sellerId;
+
+    const filter = { seller: sellerId };
 
     if (startDate || endDate) {
       filter.saleDate = {};
@@ -341,24 +343,23 @@ router.get('/admin/report', verifyToken, async (req, res) => {
 
     const sales = await Order.find(filter)
       .sort({ saleDate: -1 })
-      .populate('seller') // Para incluir nombre o código del vendedor
+      .populate('seller')
       .populate('items.product');
 
     const doc = new PDFDocument({ margin: 40, size: 'A4' });
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename=reporte_admin_${new Date().toISOString().split('T')[0]}.pdf`
+      `attachment; filename=reporte_${sellerId}_${new Date().toISOString().split('T')[0]}.pdf`
     );
     doc.pipe(res);
 
-    // Título
-    doc.fontSize(20).font('Helvetica-Bold').text('REPORTE DE VENTAS (ADMIN)', { align: 'center' }).moveDown(0.5);
+    doc.fontSize(20).font('Helvetica-Bold').text('REPORTE DE VENTAS POR VENDEDOR', { align: 'center' }).moveDown(0.5);
+    doc.fontSize(12).font('Helvetica').text(`ID Vendedor: ${sellerId}`);
     if (startDate || endDate) {
-      doc.fontSize(12).font('Helvetica')
-        .text(`Período: ${startDate || 'Inicio'} - ${endDate || 'Actual'}`)
-        .moveDown(1);
+      doc.moveDown(0.5).text(`Período: ${startDate || 'Inicio'} - ${endDate || 'Actual'}`);
     }
+    doc.moveDown(1);
 
     if (!sales.length) {
       doc.fontSize(14).fillColor('#7f8c8d')
@@ -370,8 +371,8 @@ router.get('/admin/report', verifyToken, async (req, res) => {
     // Tabla
     const tableTop = doc.y;
     const rowHeight = 20;
-    const columnWidths = [70, 90, 80, 120, 40, 80, 60]; // 7 columnas
-    const headers = ['Fecha', 'Vendedor', 'Productos', 'Cant.', 'Total', 'Pago'];
+    const columnWidths = [70, 100, 150, 50, 80, 60];
+    const headers = ['Fecha', 'Cliente', 'Productos', 'Cant.', 'Total', 'Pago'];
 
     let y = tableTop;
     let totalCantidad = 0;
@@ -394,7 +395,6 @@ router.get('/admin/report', verifyToken, async (req, res) => {
       const productos = sale.items.map(i => i.name).join(', ');
       const cantidad = sale.items.reduce((s, i) => s + i.quantity, 0);
       const total = sale.total;
-      const vendedor = sale.seller?.name || sale.seller?.code || 'N/A';
 
       totalCantidad += cantidad;
       totalVentas += total;
@@ -411,7 +411,6 @@ router.get('/admin/report', verifyToken, async (req, res) => {
       const row = [
         new Date(sale.saleDate).toLocaleDateString('es-CO'),
         sale.customerName || 'N/A',
-        vendedor,
         productos,
         cantidad.toString(),
         new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(total),
@@ -428,7 +427,6 @@ router.get('/admin/report', verifyToken, async (req, res) => {
       y += rowHeight;
     });
 
-    // Resumen
     y += 20;
     doc.font('Helvetica-Bold').fontSize(11).text('RESUMEN FINAL', 400, y);
     y += 15;
@@ -437,7 +435,6 @@ router.get('/admin/report', verifyToken, async (req, res) => {
       .text(`Ventas registradas: ${sales.length}`, 400, y + 15)
       .text(`Productos vendidos: ${totalCantidad}`, 400, y + 30);
 
-    // Pie de página
     const now = new Date();
     now.setHours(now.getHours() - 5);
     const fecha = now.toLocaleDateString('es-CO');
@@ -451,7 +448,7 @@ router.get('/admin/report', verifyToken, async (req, res) => {
     doc.end();
 
   } catch (err) {
-    console.error('Error generando PDF admin:', err);
+    console.error('Error generando PDF por vendedor:', err);
     if (!res.headersSent) {
       res.status(500).json({ error: 'Error al generar el reporte' });
     }
