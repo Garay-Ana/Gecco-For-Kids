@@ -208,7 +208,7 @@ export default function AdminPanel() {
 
   const generateSalesReport = async () => {
   try {
-    const res = await axios.get(`https://tu-backend.com/admin/report/${selectedSeller._id}`, {
+    const res = await axios.get(`https://gecco-for-kids.onrender.com/api/admin/report/${selectedSeller._id}`, {
       responseType: 'blob', // importante para manejar el PDF
       headers: {
         Authorization: `Bearer ${token}`,
