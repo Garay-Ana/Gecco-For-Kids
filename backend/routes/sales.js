@@ -340,13 +340,14 @@ router.get('/admin/report/:sellerId', verifyToken, async (req, res) => {
       if (startDate) filter.saleDate.$gte = new Date(startDate);
       if (endDate) filter.saleDate.$lte = new Date(endDate + 'T23:59:59.999Z');
     }
-    const vendedorNombre = sales[0]?.seller?.name || sales[0]?.seller?.code || 'Vendedor desconocido';
+    
 
     const sales = await Order.find(filter)
       .sort({ saleDate: -1 })
       .populate('seller')
       .populate('items.product');
 
+    const vendedorNombre = sales[0]?.seller?.name || sales[0]?.seller?.code || 'Vendedor desconocido';
     const doc = new PDFDocument({ margin: 40, size: 'A4' });
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader(
