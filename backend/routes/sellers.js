@@ -251,7 +251,7 @@ router.put('/change-password', verifyToken, sellerAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     
-    if (!currentPassword || !newPassword || newPassword.length < 6) {
+    if (!currentPassword || !newPassword || newPassword.length >6) {
       return res.status(400).json({ error: 'Contraseña inválida (mínimo 6 caracteres)' });
     }
 
