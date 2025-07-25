@@ -126,46 +126,58 @@ export default function SellerProfile() {
 
             {showPasswordForm && (
               <form onSubmit={handlePasswordChange} className="password-form">
-                <h3 className="form-title">
-                  <i className="fas fa-lock"></i> Cambiar Contraseña
-                </h3>
-                
-                <div className="form-group">
-                  <label>Nueva Contraseña</label>
-                  <input 
-                    type="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                    minLength={6}
-                    placeholder="Mínimo 6 caracteres"
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>Confirmar Contraseña</label>
-                  <input 
-                    type="password" 
-                    value={confirmPassword} 
-                    onChange={(e) => setConfirmPassword(e.target.value)} 
-                    required 
-                    minLength={6}
-                    placeholder="Repite la contraseña"
-                  />
-                </div>
-                
-                <div className="form-actions">
-                  <button type="submit" className="submit-button">
-                    <i className="fas fa-save"></i> Actualizar Contraseña
-                  </button>
-                </div>
-                
-                {msg && (
-                  <div className={`message ${success ? 'success' : 'error'}`}>
-                    {msg}
-                  </div>
-                )}
-              </form>
+  <h3 className="form-title">
+    <i className="fas fa-lock"></i> Cambiar Contraseña
+  </h3>
+
+  <div className="form-group">
+    <label>Contraseña Actual</label>
+    <input 
+      type="password" 
+      value={currentPassword} 
+      onChange={(e) => setCurrentPassword(e.target.value)} 
+      required 
+      placeholder="Ingresa tu contraseña actual"
+    />
+  </div>
+
+  <div className="form-group">
+    <label>Nueva Contraseña</label>
+    <input 
+      type="password" 
+      value={password} 
+      onChange={(e) => setPassword(e.target.value)} 
+      required 
+      minLength={6}
+      placeholder="Mínimo 6 caracteres"
+    />
+  </div>
+
+  <div className="form-group">
+    <label>Confirmar Contraseña</label>
+    <input 
+      type="password" 
+      value={confirmPassword} 
+      onChange={(e) => setConfirmPassword(e.target.value)} 
+      required 
+      minLength={6}
+      placeholder="Repite la contraseña"
+    />
+  </div>
+
+  <div className="form-actions">
+    <button type="submit" className="submit-button">
+      <i className="fas fa-save"></i> Actualizar Contraseña
+    </button>
+  </div>
+
+  {msg && (
+    <div className={`message ${success ? 'success' : 'error'}`}>
+      {msg}
+    </div>
+  )}
+</form>
+
             )}
 
             <div className="back-to-panel">
