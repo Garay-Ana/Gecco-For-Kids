@@ -28,6 +28,136 @@ function getSlugFromCategory(category) {
   return '';
 }
 
+// Componente para manejar cada tarjeta de producto
+function ProductCard({ product }) {
+  const [imageError, setImageError] = useState(false);
+  const [mainImg, setMainImg] = useState('');
+
+  // Configurar imagen principal al cargar el componente
+  useEffect(() => {
+    if (product.images && product.images.length > 0) {
+      setMainImg(product.images[0]);
+    } else if (product.image) {
+      setMainImg(product.image);
+    }
+  }, [product]);
+
+  // Manejar error de carga de imagen
+  const handleImageError = (e) => {
+    console.log('Error cargando imagen:', e.target.src);
+    setImageError(true);
+    // Imagen de placeholder SVG
+    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBMMTMwIDEyMEg3MEwxMDAgNzBaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iNDAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+Cjwvc3ZnPg==';
+  };
+
+  // Preparar arrays de colores y tallas
+  const colors = Array.isArray(product.colors) 
+    ? product.colors 
+    : (product.colors ? String(product.colors).split(',').map(c => c.trim()).filter(Boolean) : []);
+  
+  const sizes = Array.isArray(product.sizes) 
+    ? product.sizes 
+    : (product.sizes ? String(product.sizes).split(',').map(s => s.trim()).filter(Boolean) : []);
+
+  const images = product.images && product.images.length > 0 
+    ? product.images 
+    : (product.image ? [product.image] : []);
+
+  return (
+    <div className="product-card">
+      {/* Contenedor de imagen mejorado */}
+      <div className="product-image-container">
+        {mainImg ? (
+          <img 
+            src={mainImg} 
+            alt={product.name} 
+            className="product-image"
+            onError={handleImageError}
+            loading="lazy"
+          />
+        ) : (
+          <div className="image-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      <div className="product-details">
+        <h3 className="product-title">
+          <span className="product-name">{product.name}</span>
+          <span className="product-price">
+            {(product.price * 1000).toLocaleString('es-CO', { 
+              style: 'currency', 
+              currency: 'COP', 
+              minimumFractionDigits: 0 
+            })}
+          </span>
+        </h3>
+        
+        <p className="product-category">{product.category}</p>
+        <p className="product-description">{product.description}</p>
+        
+        {/* COLORES - Solo si existen */}
+        {colors.length > 0 && (
+          <div className="product-colors-row">
+            <span className="color-count">Colores:</span>
+            <div className="color-dot-list">
+              {colors.slice(0, 5).map((color, idx) => (
+                <span 
+                  key={idx} 
+                  className="color-dot" 
+                  style={{ backgroundColor: color.trim() }} 
+                  title={color.trim()}
+                />
+              ))}
+              {colors.length > 5 && (
+                <span className="color-dot more">
+                  +{colors.length - 5}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* TALLAS - Solo si existen */}
+        {sizes.length > 0 && (
+          <div className="product-sizes-row">
+            <span className="sizes-label">Tallas:</span>
+            {sizes.map((size, idx) => (
+              <span key={idx} className="size-badge">
+                {size}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        {/* MINIATURAS DE GALERÍA - Solo si hay múltiples imágenes */}
+        {images.length > 1 && (
+          <div className="product-thumbnails-row">
+            {images.slice(0, 4).map((img, idx) => (
+              <img 
+                key={idx} 
+                src={img} 
+                alt={`Vista ${idx+1} de ${product.name}`}
+                className="product-thumb"
+                onError={(e) => { e.target.style.display = 'none'; }}
+                loading="lazy"
+                onClick={() => setMainImg(img)}
+              />
+            ))}
+          </div>
+        )}
+        
+        <Link to={`/product/${product._id}`} className="details-button">
+          Ver Detalles
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,8 +168,8 @@ export default function Home() {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
-const svendor= location.pathname === '/privatevendor';
-const sadmin= location.pathname === '/privateadmin';
+  const svendor = location.pathname === '/privatevendor';
+  const sadmin = location.pathname === '/privateadmin';
 
   // Sincronizar selectedCategory con la URL
   useEffect(() => {
@@ -107,13 +237,14 @@ const sadmin= location.pathname === '/privateadmin';
   }, [selectedCategory, search]);
 
   return (
-    <div className="home-bg">
+    <div className="home-container">
       {/* Header */}
       <header className="home-header">
         <div className="header-content">
           <h1 className="logo">
             <span className="logo-accent">GECCO</span> FOR KIDS
           </h1>
+          
           {/* Categorías y búsqueda */}
           <nav className="navbar-categories">
             <div className="dropdown" ref={dropdownRef}>
@@ -148,6 +279,7 @@ const sadmin= location.pathname === '/privateadmin';
                 </ul>
               )}
             </div>
+            
             <input
               type="text"
               className="search-input"
@@ -160,6 +292,7 @@ const sadmin= location.pathname === '/privateadmin';
               }}
             />
           </nav>
+          
           <div className="header-category-title">
             {selectedCategory && (
               <span style={{ fontWeight: 700, fontSize: '2rem', marginLeft: 40 }}>
@@ -167,31 +300,32 @@ const sadmin= location.pathname === '/privateadmin';
               </span>
             )}
           </div>
-         {(sadmin || svendor) && (
-          <div className="header-buttons">
-            {sadmin && (
-              <Link to="/admin/login">
-                <button className="header-button admin">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
-                  Admin
-                </button>
-              </Link>
-            )}
+          
+          {(sadmin || svendor) && (
+            <div className="header-buttons">
+              {sadmin && (
+                <Link to="/admin/login">
+                  <button className="header-button admin">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                    Admin
+                  </button>
+                </Link>
+              )}
 
-            {svendor && (
-              <Link to="/seller/login">
-                <button className="header-button register">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                  </svg>
-                  Vendedor
-                </button>
-              </Link>
-            )}
-          </div>
-        )}
+              {svendor && (
+                <Link to="/seller/login">
+                  <button className="header-button register">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+                    </svg>
+                    Vendedor
+                  </button>
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </header>
 
@@ -208,64 +342,7 @@ const sadmin= location.pathname === '/privateadmin';
         ) : (
           <div className="products-grid">
             {products.map((product) => (
-              <div key={product._id} className="product-card">
-                <div className="product-image-container">
-                  {product.image ? (
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="product-image"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="image-placeholder">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="product-details">
-                  <h3 className="product-title">
-                    {product.name}
-                    <span className="product-price">
-                      {(product.price * 1000).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}
-                    </span>
-                  </h3>
-                  <p className="product-category">{product.category}</p>
-                  <p className="product-description">{product.description}</p>
-                  {/* COLORES */}
-                  {product.colors && (Array.isArray(product.colors) ? product.colors.length : String(product.colors).split(',').filter(c => c && c.trim() !== '').length) > 0 && (
-                    <div className="product-colors-row">
-                      <span className="color-count">Colores:</span>
-                      <div className="color-dot-list">
-                        {(Array.isArray(product.colors) ? product.colors : String(product.colors).split(',').filter(c => c && c.trim() !== '')).slice(0, 5).map((color, idx) => (
-                          <span key={idx} className="color-dot" style={{background: color.trim()}} title={color.trim()}></span>
-                        ))}
-                        {Array.isArray(product.colors) && product.colors.length > 5 && <span className="color-dot more">+{product.colors.length - 5}</span>}
-                      </div>
-                    </div>
-                  )}
-                  {/* TALLAS */}
-                  {product.sizes && (Array.isArray(product.sizes) ? product.sizes.length : String(product.sizes).split(',').filter(s => s && s.trim() !== '').length) > 0 && (
-                    <div className="product-sizes-row">
-                      <span className="sizes-label">Tallas:</span>
-                      {(Array.isArray(product.sizes) ? product.sizes : String(product.sizes).split(',').filter(s => s && s.trim() !== '')).map((size, idx) => (
-                        <span key={idx} className="size-badge">{size}</span>
-                      ))}
-                    </div>
-                  )}
-                  {/* MINIATURAS DE GALERÍA */}
-                  {product.images && product.images.length > 1 && (
-                    <div className="product-thumbnails-row">
-                      {product.images.map((img, idx) => (
-                        <img key={idx} src={img} alt={`Miniatura ${idx+1}`} className="product-thumb" style={{width:32, height:32, objectFit:'cover', borderRadius:6, marginRight:4}} />
-                      ))}
-                    </div>
-                  )}
-                  <Link to={`/product/${product._id}`} className="details-button">Ver Detalles</Link>
-                </div>
-              </div>
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         )}
@@ -292,7 +369,6 @@ const sadmin= location.pathname === '/privateadmin';
               </svg>
             </a>
           </div>
-          
         </div>
       </footer>
     </div>

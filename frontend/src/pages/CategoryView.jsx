@@ -50,7 +50,7 @@ export default function CategoryView() {
             onChange={e => setSearch(e.target.value)}
             style={{marginLeft:'2rem'}}
           />
-          <Link to="/" className="header-button" style={{marginLeft:'2rem', minWidth: '120px', maxWidth: '160px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', padding: '0 16px', borderRadius: '12px', textAlign: 'center'}}>
+          <Link to="/" className="header-button" style={{marginLeft:'3rem', minWidth: '120px', maxWidth: '170px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', padding: '0 16px', borderRadius: '10px', textAlign: 'center'}}>
             Volver al inicio
           </Link>
         </div>
@@ -93,69 +93,146 @@ export default function CategoryView() {
   );
 }
 
-// Subcomponente para manejar estado local de galería y selección
+// Subcomponente mejorado para manejar estado local de galería y selección
 function ProductCard({ product, images, colors, sizes }) {
   const [mainImg, setMainImg] = useState(images[0] || '');
   const [selectedColor, setSelectedColor] = useState(colors[0] || '');
   const [selectedSize, setSelectedSize] = useState(sizes[0] || '');
+  const [imageError, setImageError] = useState(false);
+
+  // Manejar error de carga de imagen
+  const handleImageError = (e) => {
+    console.log('Error cargando imagen:', e.target.src);
+    setImageError(true);
+    // Imagen de placeholder o imagen por defecto
+    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBMMTMwIDEyMEg3MEwxMDAgNzBaIiBmaWxsPSIjOUNBM0FGIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iNDAiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIi8+Cjwvc3ZnPg==';
+  };
+
+  // Cambiar imagen principal
+  const handleThumbnailClick = (img) => {
+    setMainImg(img);
+    setImageError(false);
+  };
+
   return (
     <div className="product-card pro-card-modern">
-      <div className="pro-gallery-layout">
-        <div className="pro-thumbs-vertical">
-          {images.length > 1 && images.map((img, idx) => (
-            <img
-              key={idx}
-              src={img}
-              alt={`Miniatura ${idx+1}`}
-              className={`pro-thumb-img${mainImg === img ? ' selected' : ''}`}
-              onMouseEnter={() => setMainImg(img)}
-              style={{width:48, height:48, objectFit:'cover', borderRadius:8, marginBottom:6, border: mainImg === img ? '2px solid #0077ff' : '2px solid #eee', cursor:'pointer', background:'#fff'}}
+      {/* Galería de imágenes mejorada */}
+      {images.length > 1 ? (
+        <div className="pro-gallery-layout">
+          <div className="pro-thumbs-vertical">
+            {images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`Miniatura ${idx+1} de ${product.name}`}
+                className={`pro-thumb-img${mainImg === img ? ' selected' : ''}`}
+                onClick={() => handleThumbnailClick(img)}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+                loading="lazy"
+              />
+            ))}
+          </div>
+          <div className="pro-main-img-container">
+            <img 
+              src={mainImg || images[0]} 
+              alt={product.name}
+              className="pro-main-img"
+              style={{objectPosition: 'top'}}
+              onError={handleImageError}
+              loading="lazy"
             />
-          ))}
+          </div>
         </div>
-        <div className="pro-main-img-container">
-          <img src={mainImg} alt={product.name} className="pro-main-img" style={{width:220, height:220, objectFit:'cover', borderRadius:12, background:'#fff'}} />
+      ) : (
+        <div className="product-image-container">
+          <img 
+            src={images[0] || mainImg} 
+            alt={product.name}
+            className="product-image"
+            onError={handleImageError}
+            loading="lazy"
+          />
         </div>
-      </div>
+      )}
+
       <div className="product-details pro-details-modern">
         <h3 className="product-title">
-          {product.name}
+          <span className="product-name">{product.name}</span>
           <span className="product-price">
-            {(product.price * 1000).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}
+            {(product.price * 1000).toLocaleString('es-CO', { 
+              style: 'currency', 
+              currency: 'COP', 
+              minimumFractionDigits: 0 
+            })}
           </span>
         </h3>
+        
         <p className="product-category">{product.category}</p>
         <p className="product-description">{product.description}</p>
-        {/* COLORES */}
-        {product.colors && (Array.isArray(product.colors) ? product.colors.length : String(product.colors).split(',').filter(c => c && c.trim() !== '').length) > 0 && (
+        
+        {/* COLORES - Solo si existen */}
+        {colors.length > 0 && (
           <div className="product-colors-row">
             <span className="color-count">Colores:</span>
             <div className="color-dot-list">
-              {(Array.isArray(product.colors) ? product.colors : String(product.colors).split(',').filter(c => c && c.trim() !== '')).slice(0, 5).map((color, idx) => (
-                <span key={idx} className="color-dot" style={{background: color.trim()}} title={color.trim()}></span>
+              {colors.slice(0, 5).map((color, idx) => (
+                <span 
+                  key={idx} 
+                  className="color-dot" 
+                  style={{ backgroundColor: color.trim() }} 
+                  title={color.trim()}
+                  onClick={() => setSelectedColor(color)}
+                />
               ))}
-              {Array.isArray(product.colors) && product.colors.length > 5 && <span className="color-dot more">+{product.colors.length - 5}</span>}
+              {colors.length > 5 && (
+                <span className="color-dot more">
+                  +{colors.length - 5}
+                </span>
+              )}
             </div>
           </div>
         )}
-        {/* TALLAS */}
-        {product.sizes && (Array.isArray(product.sizes) ? product.sizes.length : String(product.sizes).split(',').filter(s => s && s.trim() !== '').length) > 0 && (
+        
+        {/* TALLAS - Solo si existen */}
+        {sizes.length > 0 && (
           <div className="product-sizes-row">
             <span className="sizes-label">Tallas:</span>
-            {(Array.isArray(product.sizes) ? product.sizes : String(product.sizes).split(',').filter(s => s && s.trim() !== '')).map((size, idx) => (
-              <span key={idx} className="size-badge">{size}</span>
+            {sizes.map((size, idx) => (
+              <span 
+                key={idx} 
+                className={`size-badge ${selectedSize === size ? 'selected' : ''}`}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </span>
             ))}
           </div>
         )}
-        {/* MINIATURAS DE GALERÍA */}
-        {product.images && product.images.length > 1 && (
+        
+        {/* MINIATURAS ADICIONALES - Solo para productos con una imagen principal */}
+        {images.length === 1 && product.images && product.images.length > 1 && (
           <div className="product-thumbnails-row">
-            {product.images.map((img, idx) => (
-              <img key={idx} src={img} alt={`Miniatura ${idx+1}`} className="product-thumb" style={{width:32, height:32, objectFit:'cover', borderRadius:6, marginRight:4}} />
+            {product.images.slice(0, 4).map((img, idx) => (
+              <img 
+                key={idx} 
+                src={img} 
+                alt={`Vista ${idx+1} de ${product.name}`}
+                className="product-thumb"
+                onError={(e) => { e.target.style.display = 'none'; }}
+                loading="lazy"
+              />
             ))}
           </div>
         )}
-        <Link to={`/product/${product._id}`} className="details-button pro-details-btn">Ver Detalles</Link>
+        
+        <Link 
+          to={`/product/${product._id}`} 
+          className="details-button pro-details-btn"
+        >
+          Ver Detalles
+        </Link>
       </div>
     </div>
   );
