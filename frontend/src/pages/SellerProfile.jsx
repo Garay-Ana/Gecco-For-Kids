@@ -5,12 +5,16 @@ import './seller-profile.css';
 
 export default function SellerProfile() {
   const [seller, setSeller] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [msg, setMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('sellerToken');
 
@@ -42,7 +46,7 @@ export default function SellerProfile() {
     e.preventDefault();
     setMsg(''); 
     setSuccess(false);
-    
+
     if (password !== confirmPassword) {
       setMsg('Las contraseñas no coinciden');
       return;
@@ -50,16 +54,23 @@ export default function SellerProfile() {
 
     try {
       await axios.put(
-        'https://gecco-for-kids.onrender.com/api/sellers/change-password', 
-        { password }, 
-        { headers: { Authorization: `Bearer ${token}` } }
+        'https://gecco-for-kids.onrender.com/api/sellers/change-password',
+        {
+          currentPassword,
+          newPassword: password
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
       setMsg('Contraseña actualizada correctamente');
       setSuccess(true);
+      setCurrentPassword('');
       setPassword('');
       setConfirmPassword('');
-    } catch {
-      setMsg('Error al cambiar la contraseña');
+    } catch (error) {
+      const errMsg = error.response?.data?.error || 'Error al cambiar la contraseña';
+      setMsg(errMsg);
       setSuccess(false);
     }
   };
@@ -126,58 +137,72 @@ export default function SellerProfile() {
 
             {showPasswordForm && (
               <form onSubmit={handlePasswordChange} className="password-form">
-  <h3 className="form-title">
-    <i className="fas fa-lock"></i> Cambiar Contraseña
-  </h3>
+                <h3 className="form-title">
+                  <i className="fas fa-lock"></i> Cambiar Contraseña
+                </h3>
 
-  <div className="form-group">
-    <label>Contraseña Actual</label>
-    <input 
-      type="password" 
-      value={currentPassword} 
-      onChange={(e) => setCurrentPassword(e.target.value)} 
-      required 
-      placeholder="Ingresa tu contraseña actual"
-    />
-  </div>
+                <div className="form-group">
+                  <label>Contraseña Actual</label>
+                  <div className="password-input-wrapper">
+                    <input 
+                      type={showCurrent ? 'text' : 'password'} 
+                      value={currentPassword} 
+                      onChange={(e) => setCurrentPassword(e.target.value)} 
+                      required 
+                      placeholder="Ingresa tu contraseña actual"
+                    />
+                    <span onClick={() => setShowCurrent(!showCurrent)} className="eye-icon">
+                      <i className={`fas ${showCurrent ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    </span>
+                  </div>
+                </div>
 
-  <div className="form-group">
-    <label>Nueva Contraseña</label>
-    <input 
-      type="password" 
-      value={password} 
-      onChange={(e) => setPassword(e.target.value)} 
-      required 
-      minLength={6}
-      placeholder="Mínimo 6 caracteres"
-    />
-  </div>
+                <div className="form-group">
+                  <label>Nueva Contraseña</label>
+                  <div className="password-input-wrapper">
+                    <input 
+                      type={showNew ? 'text' : 'password'} 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                      required 
+                      minLength={6}
+                      placeholder="Mínimo 6 caracteres"
+                    />
+                    <span onClick={() => setShowNew(!showNew)} className="eye-icon">
+                      <i className={`fas ${showNew ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    </span>
+                  </div>
+                </div>
 
-  <div className="form-group">
-    <label>Confirmar Contraseña</label>
-    <input 
-      type="password" 
-      value={confirmPassword} 
-      onChange={(e) => setConfirmPassword(e.target.value)} 
-      required 
-      minLength={6}
-      placeholder="Repite la contraseña"
-    />
-  </div>
+                <div className="form-group">
+                  <label>Confirmar Contraseña</label>
+                  <div className="password-input-wrapper">
+                    <input 
+                      type={showConfirm ? 'text' : 'password'} 
+                      value={confirmPassword} 
+                      onChange={(e) => setConfirmPassword(e.target.value)} 
+                      required 
+                      minLength={6}
+                      placeholder="Repite la contraseña"
+                    />
+                    <span onClick={() => setShowConfirm(!showConfirm)} className="eye-icon">
+                      <i className={`fas ${showConfirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    </span>
+                  </div>
+                </div>
 
-  <div className="form-actions">
-    <button type="submit" className="submit-button">
-      <i className="fas fa-save"></i> Actualizar Contraseña
-    </button>
-  </div>
+                <div className="form-actions">
+                  <button type="submit" className="submit-button">
+                    <i className="fas fa-save"></i> Actualizar Contraseña
+                  </button>
+                </div>
 
-  {msg && (
-    <div className={`message ${success ? 'success' : 'error'}`}>
-      {msg}
-    </div>
-  )}
-</form>
-
+                {msg && (
+                  <div className={`message ${success ? 'success' : 'error'}`}>
+                    {msg}
+                  </div>
+                )}
+              </form>
             )}
 
             <div className="back-to-panel">

@@ -7,6 +7,7 @@ export default function SellerLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [msg, setMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -27,6 +28,13 @@ export default function SellerLogin() {
   return (
     <div className="sellerlogin-bg-gradient">
       <div className="sellerlogin-center-container" style={{ position: 'relative' }}>
+        <span
+          className="back-home-arrow"
+          onClick={() => navigate('/')}
+          title="Volver al inicio"
+        >
+          &#8592;
+        </span>
         <div className="sellerlogin-card">
           <div className="sellerlogin-icon-circle">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" stroke="currentColor" className="sellerlogin-main-icon">
@@ -52,15 +60,20 @@ export default function SellerLogin() {
             </div>
             <div className="sellerlogin-input-group">
               <label htmlFor="password" className="sellerlogin-label">Contraseña</label>
-              <input
-                id="password"
-                type="password"
-                className="sellerlogin-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="sellerlogin-password-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="sellerlogin-input"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span onClick={() => setShowPassword(!showPassword)} className="sellerlogin-eye-icon">
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </span>
+              </div>
             </div>
             {msg && (
               <div className="sellerlogin-message-error">
@@ -85,14 +98,6 @@ export default function SellerLogin() {
               </span>
             </p>
           </div>
-          <span
-            className="back-home-arrow"
-            onClick={() => navigate('/')}
-            title="Volver al inicio"
-            style={{ cursor: 'pointer', position: 'absolute', top: 24, left: 24, fontSize: '2rem', color: '#10b981', zIndex: 10 }}
-          >
-            &#8592;
-          </span>
         </div>
       </div>
     </div>

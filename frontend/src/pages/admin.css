@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1000vw;
+  width: 100vw;
   height: 100vh;
 }
 
@@ -170,4 +170,50 @@
 }
 .adminlogin-footer a:hover {
   color: #4338ca;
+}
+.adminlogin-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.adminlogin-password-wrapper input {
+  flex: 1;
+  padding-right: 35px;
+}
+
+.adminlogin-eye-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #888;
+}
+.adminlogin-eye-icon:hover {
+  color: #4f46e5;
+}
+
+/* Estilos para la flecha de regreso en AdminLogin */
+.back-home-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #e0e7ff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  cursor: pointer;
+  position: fixed !important;
+  top: 24px !important;
+  left: 24px !important;
+  font-size: 2rem !important;
+  color: #6366f1 !important;
+  z-index: 10 !important;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-home-arrow:hover {
+  background-color: #c7d2fe;
+  color: #4f46e5 !important;
 }

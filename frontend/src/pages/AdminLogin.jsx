@@ -7,6 +7,7 @@ export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [msg, setMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -52,15 +53,20 @@ export default function AdminLogin() {
             </div>
             <div className="adminlogin-input-group">
               <label htmlFor="password" className="adminlogin-label">Contraseña</label>
-              <input
-                id="password"
-                type="password"
-                className="adminlogin-input"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="adminlogin-password-wrapper">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="adminlogin-input"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span onClick={() => setShowPassword(!showPassword)} className="adminlogin-eye-icon">
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </span>
+              </div>
             </div>
             <div className="adminlogin-options">
               <div className="adminlogin-remember">
@@ -94,15 +100,16 @@ export default function AdminLogin() {
               </span>
             </p>
           </div>
-          <span
-            className="back-home-arrow"
-            style={{ cursor: 'pointer', position: 'absolute', top: 24, left: 24, fontSize: '2rem', color: '#6366f1', zIndex: 10 }}
-            onClick={() => navigate('/')}
-            title="Volver al inicio"
-          >
-            &#8592;
-          </span>
         </div>
+
+        {/* ← Botón de regresar fijo, fuera del card */}
+        <span
+          className="back-home-arrow"
+          onClick={() => navigate('/')}
+          title="Volver al inicio"
+        >
+          &#8592;
+        </span>
       </div>
     </div>
   );
