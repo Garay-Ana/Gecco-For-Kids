@@ -105,7 +105,7 @@ export default function AdminLogin() {
         {/* ← Botón de regresar fijo, fuera del card */}
         <span
           className="back-home-arrow"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/privateadmin')}
           title="Volver al inicio"
         >
           &#8592;

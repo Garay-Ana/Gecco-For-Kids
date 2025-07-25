@@ -30,7 +30,7 @@ export default function SellerLogin() {
       <div className="sellerlogin-center-container" style={{ position: 'relative' }}>
         <span
           className="back-home-arrow"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/privatevendor')}
           title="Volver al inicio"
         >
           &#8592;
