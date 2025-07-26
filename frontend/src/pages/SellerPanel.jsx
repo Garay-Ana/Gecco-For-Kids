@@ -382,7 +382,7 @@ export default function SellerPanel() {
               <i className="fas fa-users"></i> Vendedores a Cargo
             </h2>
             <button
-              className="btn toggle-btn"
+              className="btn toggle-btn personas-btn"
               onClick={() => setShowClients(!showClients)}
             >
               {showClients ? 'Ocultar personas a cargo' : 'Ver personas a cargo'}

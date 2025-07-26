@@ -1,3 +1,7 @@
+.personas-btn {
+  background-color: var(--primary);
+  color: #fff;
+}
 /* Variables actualizadas para mejor contraste */
 :root {
   --primary: #1a365d; /* Azul más oscuro para mejor contraste */
