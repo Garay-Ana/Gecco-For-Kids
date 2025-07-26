@@ -109,7 +109,7 @@ export default function ProductDetails() {
   const selectedColorCode = colorsArray[selectedColor] || '';
   const selectedColorName = colorNameMap[selectedColorCode.toLowerCase()] || selectedColorCode || '';
 
-  const whatsappMessage = `Hola, estoy interesado en el producto: ${product.name} (${(product.price * 1000).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })})
+  const whatsappMessage = `Hola, estoy interesado en el producto: ${product.name} (${Number(product.price).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })})
 Color: ${selectedColorName}
 Talla: ${selectedSize || 'No seleccionada'}
 ${sellerCode ? `Código de vendedor: ${sellerCode}` : ''}`;
@@ -172,7 +172,7 @@ ${sellerCode ? `Código de vendedor: ${sellerCode}` : ''}`;
         <div className="product-details-info">
           <h2>{product.name}</h2>
           <p className="product-details-price">
-            {(product.price * 1000).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}
+            {Number(product.price).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}
           </p>
           {product.colors && product.colors.length > 0 && (
             <div className="product-details-colors-vsc">
