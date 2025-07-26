@@ -161,10 +161,10 @@ function ProductCard({ product, images, colors, sizes }) {
         <h3 className="product-title">
           <span className="product-name">{product.name}</span>
           <span className="product-price">
-            {(product.price * 1000).toLocaleString('es-CO', { 
-              style: 'currency', 
-              currency: 'COP', 
-              minimumFractionDigits: 0 
+            {Number(product.price).toLocaleString('es-CO', {
+              style: 'currency',
+              currency: 'COP',
+              minimumFractionDigits: 0
             })}
           </span>
         </h3>
