@@ -63,6 +63,9 @@ function ProductCard({ product }) {
     ? product.images 
     : (product.image ? [product.image] : []);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isAdmin = location.pathname === '/privateadmin';
   return (
     <div className="product-card">
       {/* Contenedor de imagen mejorado */}
@@ -150,9 +153,12 @@ function ProductCard({ product }) {
           </div>
         )}
         
-        <Link to={`/product/${product._id}`} className="details-button">
+        <button
+          className="details-button"
+          onClick={() => navigate(`/product/${product._id}`, isAdmin ? { state: { fromAdmin: true } } : undefined)}
+        >
           Ver Detalles
-        </Link>
+        </button>
       </div>
     </div>
   );
@@ -255,11 +261,16 @@ export default function Home() {
                 Categorías {selectedCategory ? `: ${selectedCategory}` : ''}
                 <span className="dropdown-arrow">▼</span>
               </button>
+              {/* ...existing code... */}
               {dropdownOpen && (
                 <ul className="dropdown-menu">
                   <li
                     className={!selectedCategory ? 'active' : ''}
-                    onClick={() => { setSelectedCategory(''); setDropdownOpen(false); navigate('/'); }}
+                    onClick={() => {
+                      setSelectedCategory('');
+                      setDropdownOpen(false);
+                      navigate('/');
+                    }}
                   >
                     Todas
                   </li>
