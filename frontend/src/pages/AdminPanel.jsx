@@ -54,12 +54,27 @@ export default function AdminPanel() {
     }
   };
 
+  // Convierte el valor de precio a número limpio
+  const parseCOP = (val) => {
+    if (typeof val !== 'string') return val;
+    // Elimina puntos, comas y espacios
+    return Number(val.replace(/\D/g, ''));
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setForm(prev => ({
-      ...prev,
-      [name]: name === 'image' ? files[0] : name === 'images' ? Array.from(files) : value
-    }));
+    if (name === 'price') {
+      // Permite mostrar el valor con puntos, pero lo guarda limpio
+      setForm(prev => ({
+        ...prev,
+        price: value
+      }));
+    } else {
+      setForm(prev => ({
+        ...prev,
+        [name]: name === 'image' ? files[0] : name === 'images' ? Array.from(files) : value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -77,10 +92,15 @@ export default function AdminPanel() {
     }
     formData.append('sizes', form.sizes || '');
     formData.append('colors', form.colors || '');
-    
+
     Object.entries(form).forEach(([key, val]) => {
       if (["images", "image", "sizes", "colors"].includes(key)) return;
-      if (val) formData.append(key, val);
+      if (key === 'price') {
+        // Convierte el precio a número limpio
+        formData.append('price', parseCOP(val));
+      } else if (val) {
+        formData.append(key, val);
+      }
     });
 
     try {
@@ -312,9 +332,12 @@ export default function AdminPanel() {
                 <div className="input-with-icon">
                   <span className="input-icon">$</span>
                   <input
-                    id="price" name="price" type="number"
-                    placeholder="Ej: 59900" value={form.price}
-                    onChange={handleChange} required min="0" step="100"
+                    id="price" name="price" type="text"
+                    placeholder="Ej: 30.000"
+                    value={form.price}
+                    onChange={handleChange}
+                    required
+                    pattern="^[0-9.,\s]+$"
                     className="form-input"
                   />
                 </div>
@@ -513,9 +536,7 @@ export default function AdminPanel() {
                       
                       <div className="product-price-stock">
                         <span className="product-price">
-                          {(product.price * 1000).toLocaleString('es-CO', { 
-                            style: 'currency', currency: 'COP', minimumFractionDigits: 0 
-                          })}
+                          {Number(product.price).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}
                         </span>
                         <span className={`product-stock ${product.stock <= 5 ? 'low-stock' : ''}`}>
                           {product.stock} en stock
