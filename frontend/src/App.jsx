@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import { Navigate } from 'react-router-dom';
 import AdminLogin from './pages/AdminLogin';
 import AdminPanel from './pages/AdminPanel';
 import RegisterAdmin from './pages/RegisterAdmin';
@@ -14,12 +15,30 @@ import ClientDetail from './pages/ClientDetail';
 import EVentas from './pages/eVentas';
 import VerVentas from './pages/VerVentas';
 
+function PrivateRouteVendor({ children }) {
+  const token = localStorage.getItem('sellerToken');
+  return token ? children : <Navigate to="/seller/login" replace />;
+}
+
+function PrivateRouteAdmin({ children }) {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/admin/login" replace />;
+}
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/privatevendor" element={<Home />} />
-      <Route path="/privateadmin" element={<Home />} />
+      <Route path="/privatevendor" element={
+        <PrivateRouteVendor>
+          <Home />
+        </PrivateRouteVendor>
+      } />
+      <Route path="/privateadmin" element={
+        <PrivateRouteAdmin>
+          <Home />
+        </PrivateRouteAdmin>
+      } />
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/panel" element={<AdminPanel />} />
       <Route path="/admin/register" element={<RegisterAdmin />} />

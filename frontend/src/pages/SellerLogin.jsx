@@ -25,12 +25,22 @@ export default function SellerLogin() {
     }
   };
 
+  // Si el usuario no tiene token y viene de /privatevendor, permanece en login
+  const handleBack = () => {
+    const token = localStorage.getItem('sellerToken');
+    if (token) {
+      navigate('/privatevendor');
+    } else {
+      navigate('/seller/login');
+    }
+  };
+
   return (
     <div className="sellerlogin-bg-gradient">
       <div className="sellerlogin-center-container" style={{ position: 'relative' }}>
         <span
           className="back-home-arrow"
-          onClick={() => navigate('/privatevendor')}
+          onClick={handleBack}
           title="Volver al inicio"
         >
           &#8592;

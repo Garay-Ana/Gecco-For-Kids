@@ -115,8 +115,8 @@ export default function SellerRegister() {
           </div>
           <span
             className="back-home-arrow"
-            onClick={() => navigate('/')}
-            title="Volver al inicio"
+            onClick={() => navigate('/seller/login')}
+            title="Volver a login vendedor"
           >
             &#8592;
           </span>
