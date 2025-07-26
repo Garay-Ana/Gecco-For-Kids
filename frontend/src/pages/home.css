@@ -1,4 +1,4 @@
-/* home.css - TIENDA INFANTIL MEJORADA - VERSIÓN RESPONSIVA COMPLETA */
+/* home.css - TIENDA INFANTIL MEJORADA */
 * {
   margin: 0;
   padding: 0;
@@ -19,7 +19,7 @@
   --rosa-bebe: #f8bbd9;
   --sombra-azul: rgba(30, 58, 138, 0.1);
   --sombra-azul-intensa: rgba(30, 58, 138, 0.2);
-  --azul-blanquecino: #f0f8ff;
+  --azul-blanquecino: #f0f8ff; /* Nuevo color azul casi blanco */
 }
 
 /* ANIMACIONES GLOBALES */
@@ -47,7 +47,7 @@
 }
 
 /* FONDO ANIMADO CON FORMAS */
-.home-container::before, .home-bg::before {
+.home-container::before {
   content: "";
   position: fixed;
   top: 0;
@@ -64,7 +64,7 @@
 }
 
 /* CONTENEDOR PRINCIPAL */
-.home-container, .home-bg {
+.home-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -128,37 +128,6 @@
   font-weight: 500;
   margin-top: 0.2rem;
   opacity: 0.9;
-}
-
-/* MENÚ HAMBURGUESA (OCULTO POR DEFECTO) */
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 21px;
-  cursor: pointer;
-  order: 2;
-}
-
-.menu-toggle span {
-  height: 3px;
-  width: 100%;
-  background: var(--azul-marino);
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-.menu-toggle.active span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-}
-
-.menu-toggle.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.menu-toggle.active span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
 }
 
 /* NAVEGACIÓN CENTRADA */
@@ -381,7 +350,7 @@
   justify-items: center;
 }
 
-/* TARJETAS DE PRODUCTO MEJORADAS */
+/* TARJETAS DE PRODUCTO MEJORADAS (CAMBIADO A AZUL CASI BLANCO) */
 .product-card {
   background: var(--azul-blanquecino);
   border-radius: 25px;
@@ -421,7 +390,7 @@
   animation: pulso-suave 2s ease-in-out infinite;
 }
 
-/* CONTENEDORES DE IMAGEN */
+/* CONTENEDORES DE IMAGEN CORREGIDOS */
 .product-image-container, .pro-main-img-container {
   display: flex;
   justify-content: center;
@@ -503,7 +472,7 @@
   height: 100%;
 }
 
-/* TARJETAS MODERNAS */
+/* TARJETAS MODERNAS (CAMBIADO A AZUL CASI BLANCO) */
 .pro-card-modern {
   min-height: 520px;
   background: var(--azul-blanquecino);
@@ -806,6 +775,115 @@
   animation: brillar 1s ease-in-out infinite;
 }
 
+/* RESPONSIVE MEJORADO */
+@media (max-width: 1400px) {
+  .header-content {
+    max-width: 95%;
+    padding: 0 1rem;
+  }
+  .products-grid {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  .navbar-categories {
+    width: 100%;
+    justify-content: center;
+  }
+  .dropdown-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+  .search-input {
+    min-width: 100%;
+  }
+  .header-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .product-image-container, .pro-main-img-container {
+    height: 300px;
+    padding: 10px;
+  }
+  .pro-gallery-layout {
+    height: 300px;
+    padding: 10px;
+    gap: 8px;
+  }
+  .pro-thumbs-vertical {
+    width: 50px;
+  }
+  .pro-thumb-img {
+    width: 45px;
+    height: 45px;
+  }
+  .logo {
+    font-size: 2.2rem;
+  }
+  .logo-accent {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    min-height: 420px;
+  }
+  .product-image-container, .pro-main-img-container {
+    height: 220px;
+    padding: 8px;
+  }
+  .pro-gallery-layout {
+    height: 220px;
+    padding: 8px;
+    gap: 6px;
+  }
+  .pro-thumbs-vertical {
+    width: 45px;
+  }
+  .pro-thumb-img {
+    width: 40px;
+    height: 40px;
+  }
+  .product-name {
+    font-size: 1.1rem;
+  }
+  .product-price {
+    font-size: 1rem;
+  }
+  .header-content {
+    padding: 0 0.5rem;
+  }
+  .dropdown-toggle {
+    padding: 1rem 1.5rem;
+  }
+  .search-input {
+    min-width: 200px;
+  }
+  .header-buttons {
+    gap: 1rem;
+  }
+}
 /* PLACEHOLDER DE IMAGEN MEJORADO */
 .image-placeholder {
   width: 100%;
@@ -826,338 +904,40 @@
   filter: drop-shadow(0 2px 4px var(--sombra-azul));
 }
 
-/* =============================================== */
-/* MEDIA QUERIES PARA RESPONSIVIDAD - MEJORADAS */
-/* =============================================== */
-
-/* TABLETS GRANDES Y LAPTOPS PEQUEÑAS */
-@media (max-width: 1200px) {
-  .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-  
-  .product-image-container, .pro-main-img-container {
-    height: 500px;
-  }
-  
-  .pro-gallery-layout {
-    height: 220px;
-  }
-  
-  .header-content {
-    gap: 2rem;
-  }
-  
-  .dropdown-toggle, .header-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-  }
-  
-  .search-input {
-    min-width: 250px;
-  }
+/* CORRECCIÓN PARA CLASE home-bg A home-container */
+.home-bg {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* TABLETS */
-@media (max-width: 992px) {
-  .header-content {
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding: 1rem;
-  }
-  
-  .logo {
-    order: 1;
-    flex: 1 0 100%;
-    text-align: center;
-    font-size: 2.5rem;
-  }
-  
-  .menu-toggle {
-    display: flex;
-    order: 2;
-  }
-  
-  .navbar-categories {
-    display: none;
-    order: 4;
-    flex-direction: column;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.98);
-    padding: 1rem;
-    margin-top: 1rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
-  
-  .navbar-categories.active {
-    display: flex;
-  }
-  
-  .dropdown {
-    width: 100%;
-  }
-  
-  .dropdown-toggle {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .dropdown-menu {
-    position: static;
-    transform: none;
-    width: 100%;
-    margin-top: 0.5rem;
-    box-shadow: none;
-    border: 2px solid var(--azul-claro);
-    opacity: 1;
-    visibility: visible;
-    display: none;
-  }
-  
-  .dropdown:hover .dropdown-menu {
-    display: block;
-    transform: none;
-  }
-  
-  .search-input {
-    order: 3;
-    min-width: 100%;
-    margin: 0.5rem 0;
-  }
-  
-  .header-buttons {
-    order: 5;
-    width: 100%;
-    justify-content: center;
-    gap: 1rem;
-  }
-  
-  .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-  
-  .product-image-container, .pro-main-img-container {
-    height: 400px;
-  }
-  
-  .product-card {
-    min-height: 450px;
-  }
-  
-  .pro-gallery-layout {
-    flex-direction: column;
-    height: auto;
-  }
-  
-  .pro-thumbs-vertical {
-    flex-direction: row;
-    width: 100%;
-    height: 70px;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-  
-  .pro-main-img-container {
-    height: 300px;
-  }
+.home-bg::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 30%, var(--azul-pastel) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--azul-claro) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, var(--azul-pastel) 0%, transparent 50%),
+    linear-gradient(135deg, var(--gris-suave) 0%, var(--blanco-perla) 100%);
+  z-index: -1;
+  animation: ondular 6s ease-in-out infinite;
 }
 
-/* TABLETS PEQUEÑAS Y MÓVILES GRANDES */
-@media (max-width: 768px) {
-  .main-content {
-    padding: 12rem 1.5rem 2rem 1.5rem;
-  }
-  
-  .products-grid {
-    gap: 1.8rem;
-  }
-  
-  .product-image-container, .pro-main-img-container {
-    height: 350px;
-  }
-  
-  .pro-main-img-container {
-    height: 250px;
-  }
-  
-  .product-details {
-    padding: 1.5rem;
-  }
-  
-  .product-name {
-    font-size: 1.2rem;
-  }
-  
-  .product-price {
-    font-size: 1rem;
-  }
-  
-  .details-button, .pro-details-btn {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-  }
-  
-  .home-footer {
-    padding: 2rem 1.5rem;
-  }
-  
-  .footer-text {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .social-links {
-    gap: 1.5rem;
-  }
+/* MINIATURAS CLICKEABLES */
+.product-thumb {
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* MÓVILES */
-@media (max-width: 576px) {
-  .header-content {
-    gap: 1rem;
-    padding: 0.8rem;
-  }
-  
-  .logo {
-    font-size: 2rem;
-  }
-  
-  .logo-accent {
-    font-size: 1.5rem;
-  }
-  
-  .header-button {
-    padding: 0.7rem 1rem;
-    font-size: 0.9rem;
-    min-width: auto;
-    flex: 1;
-  }
-  
-  .main-content {
-    padding: 11rem 1rem 1.5rem 1rem;
-  }
-  
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .product-card {
-    max-width: 100%;
-    min-height: auto;
-  }
-  
-  .product-image-container, .pro-main-img-container {
-    height: 280px;
-  }
-  
-  .pro-main-img-container {
-    height: 200px;
-  }
-  
-  .pro-thumb-img {
-    width: 45px !important;
-    height: 45px !important;
-  }
-  
-  .product-details {
-    padding: 1.2rem;
-  }
-  
-  .product-name {
-    font-size: 1.1rem;
-  }
-  
-  .product-price {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-  }
-  
-  .product-description {
-    font-size: 0.9rem;
-  }
-  
-  .details-button, .pro-details-btn {
-    padding: 0.7rem 1.2rem;
-  }
-  
-  .home-footer {
-    padding: 1.5rem 1rem;
-  }
-  
-  .footer-text {
-    font-size: 1rem;
-    margin-bottom: 1.2rem;
-  }
-  
-  .social-links {
-    gap: 1.2rem;
-  }
-  
-  .social-icon {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-}
-
-/* MÓVILES PEQUEÑOS */
-@media (max-width: 400px) {
-  .logo {
-    font-size: 1.8rem;
-  }
-  
-  .logo-accent {
-    font-size: 1.3rem;
-  }
-  
-  .logo-subtitle {
-    font-size: 0.8rem;
-  }
-  
-  .header-button {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.8rem;
-  }
-  
-  .product-image-container, .pro-main-img-container {
-    height: 220px;
-  }
-  
-  .pro-main-img-container {
-    height: 180px;
-  }
-  
-  .pro-thumb-img {
-    width: 40px !important;
-    height: 40px !important;
-  }
-  
-  .product-details {
-    padding: 1rem;
-  }
-  
-  .product-name {
-    font-size: 1rem;
-  }
-  
-  .product-description {
-    font-size: 0.85rem;
-  }
-  
-  .color-dot {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .size-badge {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-  }
-  
-  .details-button, .pro-details-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-  }
+.product-thumb:hover {
+  transform: scale(1.15);
+  border-color: var(--azul-royal) !important;
+  box-shadow: 0 4px 12px var(--sombra-azul-intensa);
 }
