@@ -512,15 +512,13 @@ export default function AdminPanel() {
               <div className="products-grid">
                 {products.map(product => (
                   <div key={product._id} className="product-card" style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', inset: 0, zIndex: 2 }}>
-                      <Link
-                        to={`/product/${product._id}`}
-                        state={{ fromAdmin: true }}
-                        className="product-details-link"
-                        style={{ display: 'block', width: '100%', height: '100%' }}
-                        aria-label={`Ver detalles de ${product.name}`}
-                      />
-                    </div>
+                    <Link
+                      to={`/product/${product._id}`}
+                      state={{ fromAdmin: true }}
+                      className="product-details-link"
+                      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '60%', zIndex: 2 }}
+                      aria-label={`Ver detalles de ${product.name}`}
+                    />
                     <div className="product-image-container">
                       {product.image ? (
                         <img 
