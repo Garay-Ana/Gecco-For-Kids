@@ -24,7 +24,7 @@ export default function ProductDetails() {
       return;
     }
     try {
-      const response = await axios.get(`https://gecco-for-kids.onrender.com/api/sellers/${code.toUpperCase()}`);
+      const response = await axios.get(`https://gecco-for-kids.onrender.com/api/sellers/by-code/${code.toUpperCase()}`);
       if (response.data) {
         setSellerCodeMsg('');
         setIsSellerCodeValid(true);
