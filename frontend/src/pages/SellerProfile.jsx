@@ -128,7 +128,7 @@ export default function SellerProfile() {
             </div>
 
             <button 
-              className="toggle-password-form-button"
+              className="change-password-btn"
               onClick={() => setShowPasswordForm(!showPasswordForm)}
               type="button"
             >
